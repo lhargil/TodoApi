@@ -10,6 +10,9 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
+env:
+  app-name: "todo-api"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,3 +37,29 @@ jobs:
           name: api
           path: api/**
           if-no-files-found: error
+
+  # deploy_staging:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: STAGE
+  #     url: ${{ steps.deploywebapi.outputs.webapi_url }} # dynamically set the url of the webapi from a step with id deploywebapi, output called webapi-url
+  #     # echo "webapi_url=http://$(pulumi stack output bucketUrl)" >> $GITHUB_OUTPUT
+  #   steps:
+  #     - name: Download a Build Artifact
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: api
+  #         path: api # path in VPS
+  #     - name: Deploy to VPS
+  #       uses: appleboy/ssh-action@master
+  #       id: deploywebapi
+  #       with:
+  #         host: ${{ secrets.HOST }}
+  #         username: ${{ secrets.USERNAME }}
+  #         key: ${{ secrets.KEY }}
+  #         port: ${{ secrets.PORT }}
+  #         script: |
+  #           cd api
+  #           dotnet TodoApi.dll
+  #           echo "webapi_url=http://$(pulumi stack output bucketUrl)" >> $GITHUB_ENV
