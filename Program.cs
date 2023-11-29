@@ -12,6 +12,11 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
   ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
+if (!app.Environment.IsDevelopment())
+{
+  app.UseHttpsRedirection();
+}
+
 RouteGroupBuilder todoItems = app.MapGroup("/todoitems");
 
 todoItems.MapGet("/", GetAllTodos);
